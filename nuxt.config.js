@@ -18,7 +18,9 @@ module.exports = {
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
     ]
   },
-
+  router: {
+    middleware: 'check-auth'
+  },
   /*
   ** Customize the progress-bar color
   */
@@ -70,5 +72,9 @@ module.exports = {
         })
       }
     }
+  },
+  env: {
+    AUTH0_CLIENT_ID: '',
+    AUTH0_CLIENT_DOMAIN: ''
   }
 }

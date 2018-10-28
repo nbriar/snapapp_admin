@@ -97,7 +97,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer
-      :fixed="fixed"
+      :fixed="true"
       app
     >
       <span>&copy; 2017</span>

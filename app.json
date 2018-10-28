@@ -2,6 +2,7 @@
   "name": "snapapp_admin",
   "description": "",
   "scripts": {
+    "postdeploy": "npm run build"
   },
   "env": {
   },

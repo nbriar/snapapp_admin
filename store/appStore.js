@@ -1,5 +1,21 @@
 import http from '../utils/http-common'
 
+const api = function (token, query, callback) {
+  http(token).post(`http://localhost:3000/graphql`, {query: query})
+    .then(response => {
+      const data = response.data.data
+      if (response.data.errors) {
+        console.log('ERROR: ', response.data.errors)
+        return null
+      }
+      callback(data)
+    })
+    .catch(e => {
+      console.log('ERROR: ', e)
+      return null
+    })
+}
+
 // initial state
 export const state = () => {
   return {
@@ -20,8 +36,8 @@ export const getters = {
 
 // actions
 export const actions = {
-  ALL_APPS ({ commit, rootState }) {
-    const body = `{
+  GET_ALL_APPS ({ commit, rootState }) {
+    const query = `{
       customerApps {
         name
         slug
@@ -30,22 +46,30 @@ export const actions = {
         updatedAt
       }
     }`
+    api(rootState.authToken, query, data => {
+      commit('SET_APPS', data.customerApps)
+    })
+  },
 
-    http(rootState.authToken).post(`http://localhost:3000/graphql`, {query: body})
-      .then(response => {
-        const data = response.data.data
-        if (response.data.errors) {
-          console.log('ERROR - fetching apps: ', response.data.errors)
-          return []
-        }
-        console.log('Getting: ', `customer_apps`)
-        commit('SET_APPS', data.customerApps)
-        return  data.customerApps
-      })
-      .catch(e => {
-        console.log('ERROR - fetching apps: ', e)
-        return []
-      })
+  NEW_APP ({ commit, rootState}, payload) {
+    // payload is inn the form {name: "somename"}
+    const query = `mutation {
+      createCustomerApp(input: {name: "${payload.name}"}) {
+        customerApp {name, slug, authAccountId}
+        errors
+      }
+    }`
+
+    api(rootState.authToken, query, data => {
+      const res = data.createCustomerApp
+      if (res.errors.length > 0) {
+        // create an alerts store and emit here
+        console.log('ERROR:', res.errors)
+        return
+      }
+
+      commit('CREATE_APP', {item: res.customerApp})
+    })
   }
 }
 
@@ -75,6 +99,11 @@ export const actions = {
 export const mutations = {
   SET_APPS (state, data) {
     state.apps = data
+  },
+  CREATE_APP (state, data) {
+    if (data.item) {
+     state.apps.push(data.item)
+    }
   }
 }
 // // mutations

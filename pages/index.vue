@@ -11,8 +11,8 @@
         <logo/>
         <vuetify-logo/>
       </div>
-      <div>test{{ apps }}</div>
       <v-card>
+        <Apps />
         <v-card-title class="headline">Welcome to the Vuetify + Nuxt.js template</v-card-title>
         <v-card-text>
           <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
@@ -55,6 +55,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Apps from '../components/apps.vue'
 import Logo from '../components/Logo.vue'
 import VuetifyLogo from '../components/VuetifyLogo.vue'
 
@@ -62,16 +63,13 @@ export default {
   middleware: 'authenticated',
   components: {
     Logo,
-    VuetifyLogo
+    VuetifyLogo,
+    Apps
   },
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
     loggedUser: 'loggedUser',
     apps: 'appStore/apps'
-  }),
-  created () {
-    this.$store.dispatch('appStore/ALL_APPS')
-    console.log('user', this.loggedUser)
-  }
+  })
 }
 </script>

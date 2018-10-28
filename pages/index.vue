@@ -11,6 +11,7 @@
         <logo/>
         <vuetify-logo/>
       </div>
+      <div>test{{ apps }}</div>
       <v-card>
         <v-card-title class="headline">Welcome to the Vuetify + Nuxt.js template</v-card-title>
         <v-card-text>
@@ -63,9 +64,14 @@ export default {
     Logo,
     VuetifyLogo
   },
-  computed: mapGetters([
-    'isAuthenticated',
-    'loggedUser'
-  ]),
+  computed: mapGetters({
+    isAuthenticated: 'isAuthenticated',
+    loggedUser: 'loggedUser',
+    apps: 'appStore/apps'
+  }),
+  created () {
+    this.$store.dispatch('appStore/ALL_APPS')
+    console.log('user', this.loggedUser)
+  }
 }
 </script>

@@ -1,5 +1,5 @@
-import http from '../utils/http-common'
-import { auth } from '../utils/auth'
+import http from '../../utils/http-common'
+import { auth } from '../../utils/auth'
 
 function _index () {
   return http(auth.token).get(`${process.env.apiBaseUrl}/customer_apps`)

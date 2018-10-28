@@ -1,27 +1,54 @@
-// import appsApi from '../api/apps-api'
-//
-// // initial state
-// const state = {
-//   apps: [],
-//   currentApp: {}
-// }
-//
-// // getters
-// const getters = {
-//   apps: state => state.apps,
-//   currentApp: state => state.currentApp,
-//   appById: (state) => (id) => {
-//     return state.apps.find(app => app.id === id)
-//   }
-// }
-//
-// // actions
-// const actions = {
-//   getAllApps ({ commit }) {
-//     appsApi.getApps(data => {
-//       commit('setApps', data.customer_apps)
-//     })
-//   },
+import http from '../utils/http-common'
+
+// initial state
+export const state = () => {
+  return {
+    apps: [],
+    currentApp: {}
+  }
+}
+
+// getters
+export const getters = {
+  apps: state => state.apps,
+  currentApp: state => state.currentApp,
+  appById: (state) => (id) => {
+    return state.apps.find(app => app.id === id)
+  }
+}
+
+
+// actions
+export const actions = {
+  ALL_APPS ({ commit, rootState }) {
+    const body = `{
+      customerApps {
+        name
+        slug
+        authAccountId
+        createdAt
+        updatedAt
+      }
+    }`
+
+    http(rootState.authToken).post(`http://localhost:3000/graphql`, {query: body})
+      .then(response => {
+        const data = response.data.data
+        if (response.data.errors) {
+          console.log('ERROR - fetching apps: ', response.data.errors)
+          return []
+        }
+        console.log('Getting: ', `customer_apps`)
+        commit('SET_APPS', data.customerApps)
+        return  data.customerApps
+      })
+      .catch(e => {
+        console.log('ERROR - fetching apps: ', e)
+        return []
+      })
+  }
+}
+
 //   getApp ({ commit }, payload) {
 //     appsApi.findApp(payload.id, data => {
 //       commit('findApp', {app: data})
@@ -43,7 +70,13 @@
 //     })
 //   }
 // }
-//
+
+
+export const mutations = {
+  SET_APPS (state, data) {
+    state.apps = data
+  }
+}
 // // mutations
 // const mutations = {
 //   setApps (state, data) {
@@ -78,8 +111,8 @@
 // }
 //
 // export default {
-//   state,
-//   getters,
-//   actions,
-//   mutations
+//   state
+//   // getters,
+//   // actions,
+//   // mutations
 // }

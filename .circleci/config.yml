@@ -16,20 +16,19 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - text_ui-{{ checksum "package.json" }}
+          - snappapp_admin-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
-          - text_ui-
+          - snappapp_admin
 
       - run: npm install
 
       - save_cache:
           paths:
             - node_modules
-          key: text_ui-{{ checksum "package.json" }}
+          key: snappapp_admin-{{ checksum "package.json" }}
 
       # run tests!
       - run: npm run lint
-      - run: npm run build
       - run: npm test
   #
   # build:

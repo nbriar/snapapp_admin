@@ -1,6 +1,7 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
+      v-if="isAuthenticated"
       :mini-variant="miniVariant"
       :clipped="clipped"
       v-model="drawer"
@@ -9,7 +10,7 @@
     >
       <v-list>
         <v-list-tile
-          v-for="(item, i) in items"
+          v-for="(item, i) in navItems"
           :to="item.to"
           :key="i"
           router
@@ -29,31 +30,33 @@
       fixed
       app
     >
-      <v-toolbar-side-icon @click="drawer = !drawer" />
+      <v-toolbar-side-icon
+        v-if="isAuthenticated"
+        @click="drawer = !drawer"
+      />
       <v-btn
+        v-if="isAuthenticated"
         icon
         @click.stop="miniVariant = !miniVariant"
       >
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
       </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
       <v-toolbar-title v-text="title"/>
+
+      <v-spacer />
+
       <v-btn
+        v-if="isAuthenticated"
         icon
         @click.stop="rightDrawer = !rightDrawer"
       >
-        <v-icon>menu</v-icon>
+        <v-icon>person</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="!isAuthenticated"
+        to="/auth/sign-in"
+      >
+        Login
       </v-btn>
     </v-toolbar>
     <v-content>
@@ -68,12 +71,29 @@
       fixed
     >
       <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>compare_arrows</v-icon>
+        <v-list-tile @click.native="rightDrawer = false">
+          <v-list-tile-action >
+            <v-btn icon>
+              <v-icon>close</v-icon>
+            </v-btn>
           </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
         </v-list-tile>
+        <v-list>
+          <v-list-tile
+            v-for="(item, i) in profileItems"
+            :to="item.to"
+            :key="i"
+            router
+            exact
+          >
+            <v-list-tile-action>
+              <v-icon v-html="item.icon" />
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title v-text="item.title" />
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
       </v-list>
     </v-navigation-drawer>
     <v-footer
@@ -86,21 +106,33 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     data() {
       return {
-        clipped: false,
+        clipped: true,
         drawer: true,
-        fixed: false,
-        items: [
-          { icon: 'apps', title: 'Welcome', to: '/' },
+        navItems: [
+          { icon: 'apps', title: 'My Applications', to: '/' },
           { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+        ],
+        profileItems: [
+          { icon: 'fingerprint', title: 'Profile', to: '/' },
+          { icon: 'attach_money', title: 'Account', to: '/inspire' },
+          { icon: 'settings', title: 'Settings', to: '/inspire' },
+          { icon: 'help', title: 'Help', to: '/inspire' },
+          { icon: 'block', title: 'Sign Out', to: '/auth/sign-off' }
         ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Vuetify.js'
+        title: 'SnapApp'
       }
-    }
+    },
+    computed: mapGetters([
+      'isAuthenticated',
+      'loggedUser'
+    ])
   }
 </script>

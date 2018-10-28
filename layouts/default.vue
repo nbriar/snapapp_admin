@@ -10,7 +10,7 @@
     >
       <v-list>
         <v-list-tile
-          v-for="(item, i) in items"
+          v-for="(item, i) in navItems"
           :to="item.to"
           :key="i"
           router
@@ -78,6 +78,22 @@
             </v-btn>
           </v-list-tile-action>
         </v-list-tile>
+        <v-list>
+          <v-list-tile
+            v-for="(item, i) in profileItems"
+            :to="item.to"
+            :key="i"
+            router
+            exact
+          >
+            <v-list-tile-action>
+              <v-icon v-html="item.icon" />
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title v-text="item.title" />
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
       </v-list>
     </v-navigation-drawer>
     <v-footer
@@ -97,10 +113,16 @@
       return {
         clipped: true,
         drawer: true,
-        fixed: false,
-        items: [
+        navItems: [
           { icon: 'apps', title: 'My Applications', to: '/' },
           { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+        ],
+        profileItems: [
+          { icon: 'fingerprint', title: 'Profile', to: '/' },
+          { icon: 'attach_money', title: 'Account', to: '/inspire' },
+          { icon: 'settings', title: 'Settings', to: '/inspire' },
+          { icon: 'help', title: 'Help', to: '/inspire' },
+          { icon: 'block', title: 'Sign Out', to: '/auth/sign-off' }
         ],
         miniVariant: false,
         right: true,

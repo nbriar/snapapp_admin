@@ -3,7 +3,7 @@
     <v-btn
       small
       outline
-      color="primary"
+      color="secondary"
       class="mb-3"
       @click="toggleAppForm">Create New App</v-btn>
     <v-card>
@@ -26,12 +26,59 @@
         <template
           slot="items"
           slot-scope="props">
-          <td>{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.slug }}</td>
           <td
-            class="text-xs-left"
+            class="cursor-hover"
             @click="viewApp(props.item.id)">
-            <a>View</a>
+            {{ props.item.name }}
+          </td>
+          <td class="text-xs-left">{{ props.item.slug }}</td>
+          <td class="text-xs-left">
+            <v-icon
+              class="cursor-hover"
+              @click="viewApp(props.item.id)">pageview</v-icon>
+          </td>
+          <td class="text-xs-left">
+            <v-icon
+              class="cursor-hover"
+              @click="editApp(props.item)"
+            >edit</v-icon>
+          </td>
+          <td class="text-xs-left">
+            <v-icon
+              class="cursor-hover"
+              @click="deleteConfirmation = true">delete</v-icon>
+            <v-dialog
+              v-model="deleteConfirmation"
+              max-width="290"
+            >
+              <v-card>
+                <v-card-title class="headline">
+                  <b class="mr-3">
+                    <span class="text-bold red--text">DELETE</span>
+                  </b>
+                  <b class="text-info"> {{ props.item.name }}</b>?
+                  <div class="mt-3">This is irreversible!</div>
+                </v-card-title>
+                <v-card-actions>
+                  <v-spacer />
+
+                  <v-btn
+                    flat="flat"
+                    @click="deleteConfirmation = false"
+                  >
+                    Cancel
+                  </v-btn>
+
+                  <v-btn
+                    color="red darken-1"
+                    flat="flat"
+                    @click="deleteApp(props.item.id)"
+                  >
+                    Continue
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </td>
         </template>
         <v-alert
@@ -46,11 +93,14 @@
 
     <!-- New App Form-->
     <div v-if="showAppForm">
-      <h3>Create New App</h3>
-      <form v-if="showAppForm">
+      <h3>{{ isUpdatedApp ? 'Update' : 'Create' }} New App</h3>
+      <v-form
+        v-if="showAppForm"
+        v-model="validForm"
+        lazy-validation>
         <v-text-field
           v-validate="'required|alpha_spaces'"
-          v-model="newAppName"
+          v-model="editedAppName"
           :error-messages="errors.collect('name')"
           label="App Name"
           data-vv-name="name"
@@ -65,7 +115,7 @@
           outline
           color="primary"
           @click="toggleAppForm">Cancel</v-btn>
-      </form>
+      </v-form>
     </div>
   </div>
 </template>
@@ -78,12 +128,18 @@ export default {
   data: function () {
     return {
       showAppForm: false,
-      newAppName: '',
+      validForm: false,
+      deleteConfirmation: false,
+      isUpdatedApp: false,
+      currentApp: null,
+      editedAppName: '',
       search: '',
       headers: [
         { text: 'Name', align: 'left', sortable: true, value: 'name' },
         { text: 'Code-Name', sortable: true, value: 'slug' },
-        { text: '', sortable: false, value: 'controls' }
+        { text: '', sortable: false, value: 'view' },
+        { text: '', sortable: false, value: 'edit' },
+        { text: '', sortable: false, value: 'delete' }
       ]
     }
   },
@@ -101,14 +157,34 @@ export default {
       event.preventDefault()
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.$store.dispatch('newApp', {body: {name: this.newAppName}})
+          if (this.isUpdatedApp) {
+            this.$store.dispatch('appStore/EDIT_APP', {id: this.currentApp.id, name: this.editedAppName})
+          } else {
+            this.$store.dispatch('appStore/NEW_APP', {name: this.editedAppName})
+          }
           this.toggleAppForm()
         }
       })
     },
     viewApp: function (appId) {
       this.$router.push({ name: 'app', params: { appId } })
+    },
+    editApp: function (app) {
+      this.showAppForm = true
+      this.isUpdatedApp = true
+      this.currentApp = app
+      this.editedAppName = app.name
+    },
+    deleteApp: function (appId) {
+      this.deleteConfirmation = false
+      this.$store.dispatch('appStore/DESTROY_APP', {id: appId})
     }
   }
 }
 </script>
+
+<style>
+.cursor-hover:hover{
+  cursor: pointer;
+}
+</style>

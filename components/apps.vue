@@ -167,7 +167,7 @@ export default {
       })
     },
     viewApp: function (appId) {
-      this.$router.push({ name: 'app', params: { appId } })
+      this.$router.push({ name: 'customer-apps-id', params: { id: appId } })
     },
     editApp: function (app) {
       this.showAppForm = true

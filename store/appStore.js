@@ -1,20 +1,5 @@
 import http from '../utils/http-common'
-
-const api = function (token, query, callback) {
-  http(token).post(`http://localhost:3000/graphql`, {query: query})
-    .then(response => {
-      const data = response.data.data
-      if (response.data.errors) {
-        console.log('ERROR: ', response.data.errors)
-        return null
-      }
-      callback(data)
-    })
-    .catch(e => {
-      console.log('ERROR: ', e)
-      return null
-    })
-}
+import api from '../utils/api'
 
 // initial state
 export const state = () => {
@@ -27,10 +12,7 @@ export const state = () => {
 // getters
 export const getters = {
   apps: state => state.apps,
-  currentApp: state => state.currentApp,
-  appById: (state) => (id) => {
-    return state.apps.find(app => app.id === id)
-  }
+  currentApp: state => state.currentApp
 }
 
 
@@ -47,99 +29,139 @@ export const actions = {
         updatedAt
       }
     }`
-    api(rootState.authToken, query, data => {
-      commit('SET_APPS', data.customerApps)
+    api({
+      token: rootState.authToken,
+      query,
+      variables: null,
+      callback: data => {
+        commit('SET_APPS', data.customerApps)
+      }
     })
   },
+  GET_APP ({ commit, rootState }, payload) {
+    // payload is in the form {id: 345}
+    const query = `
+    query ($id: ID!) {
+      customerApp (id: $id) {
+        id
+        name
+        slug
+        authAccountId
+        pages {
+          title
+        }
+        collections {
+          name
+        }
+        components {
+          name
+        }
+        createdAt
+        updatedAt
+      }
+    }`
 
+    const variables = {"id": payload.id}
+
+    api({
+      token: rootState.authToken,
+      query,
+      variables: variables,
+      callback: data => {
+        commit('SET_CURRENT_APP', data.customerApp)
+      }
+    })
+  },
   NEW_APP ({ commit, rootState}, payload) {
-    // payload is inn the form {name: "somename"}
-    const query = `mutation {
-      createCustomerApp(input: {name: "${payload.name}"}) {
+    // payload is in the form {name: "somename"}
+    const query = `mutation ($name: String!) {
+      createCustomerApp(input: {name: $name}) {
         customerApp {id, name, slug, authAccountId}
         errors
       }
     }`
 
-    api(rootState.authToken, query, data => {
-      const res = data.createCustomerApp
-      if (res.errors.length > 0) {
-        // create an alerts store and emit here
-        console.log('ERROR:', res.errors)
-        return
-      }
+    const variables = {"name": payload.name}
 
-      commit('CREATE_APP', {item: res.customerApp})
+    api({
+      token: rootState.authToken,
+      query,
+      variables: variables,
+      callback: data => {
+        const res = data.createCustomerApp
+        if (res.errors.length > 0) {
+          // create an alerts store and emit here
+          console.log('ERROR:', res.errors)
+          return
+        }
+
+        commit('CREATE_APP', {item: res.customerApp})
+      }
     })
   },
   DESTROY_APP ({ commit, rootState}, payload) {
     // payload is inn the form {id: someappid}
-    const query = `mutation {
-      deleteCustomerApp(input: {id: ${payload.id}}) {
+    const query = `mutation ($id: Int!){
+      deleteCustomerApp(input: {id: $id}) {
         customerApp {id, name, slug, authAccountId}
         errors
       }
     }`
 
-    api(rootState.authToken, query, data => {
-      const res = data.deleteCustomerApp
-      if (res.errors.length > 0) {
-        // create an alerts store and emit here
-        console.log('ERROR:', res.errors)
-        return
-      }
+    const variables = {"id": payload.id}
 
-      commit('DELETE_APP', {item: res.customerApp})
+    api({
+      token: rootState.authToken,
+      query,
+      variables: variables,
+      callback: data => {
+        const res = data.deleteCustomerApp
+        if (res.errors.length > 0) {
+          // create an alerts store and emit here
+          console.log('ERROR:', res.errors)
+          return
+        }
+
+        commit('DELETE_APP', {item: res.customerApp})
+      }
     })
   },
   EDIT_APP ({ commit, rootState}, payload) {
     // payload is inn the form {id: someappid, name: somenewname}
-    const query = `mutation {
-      updateCustomerApp(input: {id: ${payload.id}, name: "${payload.name}"}) {
+    const query = `mutation ($id: Int!, $name: String!) {
+      updateCustomerApp(input: {id: $id, name: $name}) {
         customerApp {id, name, slug, authAccountId}
         errors
       }
     }`
 
-    api(rootState.authToken, query, data => {
-      const res = data.updateCustomerApp
-      if (res.errors.length > 0) {
-        // create an alerts store and emit here
-        console.log('ERROR:', res.errors)
-        return
-      }
+    const variables = {"id": payload.id, "name": payload.name}
 
-      commit('UPDATE_APP', {item: res.customerApp})
+    api({
+      token: rootState.authToken,
+      query,
+      variables: variables,
+      callback: data => {
+        const res = data.updateCustomerApp
+        if (res.errors.length > 0) {
+          // create an alerts store and emit here
+          console.log('ERROR:', res.errors)
+          return
+        }
+
+        commit('UPDATE_APP', {item: res.customerApp})
+      }
     })
   }
 }
 
-//   getApp ({ commit }, payload) {
-//     appsApi.findApp(payload.id, data => {
-//       commit('findApp', {app: data})
-//     })
-//   },
-//   updateApp ({ commit }, payload) {
-//     appsApi.editApp(payload, data => {
-//       commit('editApp', {oldApp: payload.item, newApp: data})
-//     })
-//   },
-//   newApp ({ commit }, payload) {
-//     appsApi.createApp(payload, data => {
-//       commit('createApp', {newApp: data})
-//     })
-//   },
-//   destroyApp ({ commit }, payload) {
-//     appsApi.deleteApp(payload, data => {
-//       commit('deleteApp', {app: payload.item})
-//     })
-//   }
-// }
-
-
+// mutations
 export const mutations = {
   SET_APPS (state, data) {
     state.apps = data
+  },
+  SET_CURRENT_APP (state, data) {
+    state.currentApp = data
   },
   CREATE_APP (state, data) {
     if (data.item) {
@@ -147,7 +169,7 @@ export const mutations = {
     }
   },
   UPDATE_APP (state, data) {
-    var updatedApp = state.apps.find(function (app) {
+    const updatedApp = state.apps.find(function (app) {
       return app.id === data.item.id
     })
 
@@ -159,7 +181,7 @@ export const mutations = {
     }
   },
   DELETE_APP (state, data) {
-    var deletedApp = state.apps.find(function (app) {
+    const deletedApp = state.apps.find(function (app) {
       return app.id === data.item.id
     })
 
@@ -170,42 +192,3 @@ export const mutations = {
     }
   }
 }
-// // mutations
-// const mutations = {
-//   setApps (state, data) {
-//     state.apps = data
-//   },
-//   findApp (state, data) {
-//     state.currentApp = data.app
-//   },
-//   editApp (state, data) {
-//     const index = state.apps.indexOf(data.oldApp)
-//
-//     if (index !== -1) {
-//       state.apps[index] = data.newApp
-//     }
-//   },
-//   createApp (state, data) {
-//     if (data.newApp) {
-//       state.apps.push(data.newApp)
-//     }
-//   },
-//   deleteApp (state, data) {
-//     var deletedApp = state.apps.find(function (app) {
-//       return app.id === data.app.id
-//     })
-//
-//     const index = state.apps.indexOf(deletedApp)
-//
-//     if (index !== -1) {
-//       state.apps.splice(index, 1)
-//     }
-//   }
-// }
-//
-// export default {
-//   state
-//   // getters,
-//   // actions,
-//   // mutations
-// }

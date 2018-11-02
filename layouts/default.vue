@@ -1,5 +1,6 @@
 <template>
   <v-app dark>
+    <snackbar />
     <v-navigation-drawer
       v-if="isAuthenticated"
       :mini-variant="miniVariant"
@@ -96,19 +97,17 @@
         </v-list>
       </v-list>
     </v-navigation-drawer>
-    <v-footer
-      :fixed="true"
-      app
-    >
-      <span>&copy; 2017</span>
-    </v-footer>
   </v-app>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
+  import snackbar from '../components/snackbar'
 
   export default {
+    components: {
+      snackbar
+    },
     data() {
       return {
         clipped: true,

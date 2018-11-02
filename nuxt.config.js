@@ -76,6 +76,7 @@ module.exports = {
   },
   env: {
     AUTH0_CLIENT_ID: '',
-    AUTH0_CLIENT_DOMAIN: ''
+    AUTH0_CLIENT_DOMAIN: '',
+    SNAPAPP_API_URL: '',
   }
 }

@@ -1,21 +1,27 @@
 import http from '../utils/http-common'
+import { unsetToken } from './auth'
 const config = require('../config.json')
 
-export default function ({token, query, variables, callback}) {
+export default function ({token, query, variables, onSuccess, onFailure}) {
   http(token).post(config.SNAPAPP_API_URL, {query: query, variables: variables})
     .then(response => {
       const data = response.data.data
 
       if (response.data.errors) {
-        console.log('ERROR: ', response.data.errors)
+        const errors = response.data.errors || response.errors
+        onFailure(errors.join(', '))
         return null
       }
 
-      callback(data)
+      onSuccess(data)
     })
     .catch(e => {
-      // TODO probably need to do a bugsnag here
-      console.log('ERROR: ', e)
+      if (e.response.status === 401) {
+       unsetToken()
+       window.location = '/auth/sign-in'
+      }
+
+      onFailure(e.message)
       return null
     })
 }

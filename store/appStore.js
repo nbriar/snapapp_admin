@@ -33,8 +33,11 @@ export const actions = {
       token: rootState.authToken,
       query,
       variables: null,
-      callback: data => {
+      onSuccess: data => {
         commit('SET_APPS', data.customerApps)
+      },
+      onFailure: data => {
+        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -67,8 +70,11 @@ export const actions = {
       token: rootState.authToken,
       query,
       variables: variables,
-      callback: data => {
+      onSuccess: data => {
         commit('SET_CURRENT_APP', data.customerApp)
+      },
+      onFailure: data => {
+        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -87,15 +93,17 @@ export const actions = {
       token: rootState.authToken,
       query,
       variables: variables,
-      callback: data => {
+      onSuccess: data => {
         const res = data.createCustomerApp
         if (res.errors.length > 0) {
-          // create an alerts store and emit here
-          console.log('ERROR:', res.errors)
+          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('CREATE_APP', {item: res.customerApp})
+      },
+      onFailure: data => {
+        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -114,15 +122,17 @@ export const actions = {
       token: rootState.authToken,
       query,
       variables: variables,
-      callback: data => {
+      onSuccess: data => {
         const res = data.deleteCustomerApp
         if (res.errors.length > 0) {
-          // create an alerts store and emit here
-          console.log('ERROR:', res.errors)
+          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('DELETE_APP', {item: res.customerApp})
+      },
+      onFailure: data => {
+        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -141,16 +151,19 @@ export const actions = {
       token: rootState.authToken,
       query,
       variables: variables,
-      callback: data => {
+      onSuccess: data => {
         const res = data.updateCustomerApp
         if (res.errors.length > 0) {
-          // create an alerts store and emit here
-          console.log('ERROR:', res.errors)
+          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('UPDATE_APP', {item: res.customerApp})
+      },
+      onFailure: data => {
+        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
+
     })
   }
 }

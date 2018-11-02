@@ -1,7 +1,8 @@
 <template>
   <v-snackbar
     v-model="show"
-    :color="color">
+    :color="color"
+    :multi-line="true">
     {{ message }}
     <v-btn
       flat

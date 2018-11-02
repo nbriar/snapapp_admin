@@ -25,6 +25,20 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+      <v-spacer />
+      <v-list>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-btn
+              v-if="isAuthenticated"
+              icon
+              @click.stop="miniVariant = !miniVariant"
+            >
+              <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
     </v-navigation-drawer>
     <v-toolbar
       :clipped-left="clipped"
@@ -35,13 +49,7 @@
         v-if="isAuthenticated"
         @click="drawer = !drawer"
       />
-      <v-btn
-        v-if="isAuthenticated"
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
-      </v-btn>
+
       <v-toolbar-title v-text="title"/>
 
       <v-spacer />

@@ -22,11 +22,11 @@ export default {
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
     loggedUser: 'loggedUser',
-    currentApp: 'appStore/currentApp'
+    currentApp: 'apps/current'
   }),
   created () {
     const id = this.$route.params.id
-    this.$store.dispatch('appStore/GET_APP', {id: id})
+    this.$store.dispatch('apps/GET', {id: id})
   }
 }
 </script>

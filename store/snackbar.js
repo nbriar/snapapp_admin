@@ -7,3 +7,9 @@ export const mutations = {
     state.snack = snack
   }
 }
+
+export default {
+  namespaced: true,
+  state,
+  mutations
+}

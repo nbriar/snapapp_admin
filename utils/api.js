@@ -2,8 +2,9 @@ import http from '../utils/http-common'
 import { unsetToken } from './auth'
 const config = require('../config.json')
 
+
 export default function ({token, query, variables, onSuccess, onFailure}) {
-  http(token).post(config.SNAPAPP_API_URL, {query: query, variables: variables})
+  http(token).post(config.API_URL, {query: query, variables: variables})
     .then(response => {
       const data = response.data.data
 

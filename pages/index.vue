@@ -19,7 +19,7 @@ export default {
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
     loggedUser: 'loggedUser',
-    apps: 'appStore/apps'
+    apps: 'apps/list'
   })
 }
 </script>

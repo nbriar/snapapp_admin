@@ -1,15 +1,15 @@
 // initial state
 export const state = () => {
   return {
-    list: [],
-    current: {}
+    pages: [],
+    currentPage: {}
   }
 }
 
 // getters
 export const getters = {
-  list: state => state.list,
-  current: state => state.current
+  pages: state => state.pages,
+  currentPage: state => state.currentPage
 }
 
 
@@ -17,44 +17,38 @@ export const getters = {
 export const actions = {
   GET_ALL ({ commit, rootState }) {
     const query = `{
-      customerApps {
+      pages {
         id
-        name
-        slug
-        authAccountId
+        title
+        route
         createdAt
         updatedAt
       }
     }`
-
     this.app.$api({
       query,
       variables: null,
-      onSuccess: (data) => {
-        commit('SET_ALL', data.customerApps)
+      onSuccess: data => {
+        commit('SET_ALL', data.pages)
       },
-      onFailure: (data) => {
+      onFailure: data => {
         commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
-  GET ({ commit, rootState }, payload) {
+  GET_ONE ({ commit, rootState }, payload) {
     // payload is in the form {id: 345}
     const query = `
     query ($id: ID!) {
-      customerApp (id: $id) {
+      page (id: $id) {
         id
-        name
-        slug
-        authAccountId
-        pages {
+        title
+        route
+        collections {
           title
         }
-        collections {
-          name
-        }
         components {
-          name
+          title
         }
         createdAt
         updatedAt
@@ -66,38 +60,38 @@ export const actions = {
     this.app.$api({
       query,
       variables: variables,
-      onSuccess: (data) => {
-        commit('SET_CURRENT', data.customerApp)
+      onSuccess: data => {
+        commit('SET_CURRENT', data.page)
       },
-      onFailure: (data) => {
+      onFailure: data => {
         commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
   NEW ({ commit, rootState}, payload) {
-    // payload is in the form {name: "somename"}
-    const query = `mutation ($name: String!) {
-      createCustomerApp(input: {name: $name}) {
-        customerApp {id, name, slug, authAccountId}
+    // payload is in the form {appId: this.$route.params.appId, title: this.newPageName}
+    const query = `mutation ($title: String!, $appId: Int!) {
+      createPage(input: {title: $title, appId: $appId}) {
+        page {id, title, route}
         errors
       }
     }`
 
-    const variables = {"name": payload.name}
+    const variables = {"title": payload.title, "appId": rootState.apps.current.id}
 
     this.app.$api({
       query,
       variables: variables,
-      onSuccess: (data) => {
-        const res = data.createCustomerApp
+      onSuccess: data => {
+        const res = data.createPage
         if (res.errors.length > 0) {
           commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
-        commit('CREATE', {item: res.customerApp})
+        commit('CREATE', {item: res.page})
       },
-      onFailure: (data) => {
+      onFailure: data => {
         commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
@@ -105,8 +99,8 @@ export const actions = {
   DESTROY ({ commit, rootState}, payload) {
     // payload is inn the form {id: someappid}
     const query = `mutation ($id: Int!){
-      deleteCustomerApp(input: {id: $id}) {
-        customerApp {id, name, slug, authAccountId}
+      deletePage(input: {id: $id}) {
+        page {id, title, route}
         errors
       }
     }`
@@ -116,44 +110,44 @@ export const actions = {
     this.app.$api({
       query,
       variables: variables,
-      onSuccess: (data) => {
-        const res = data.deleteCustomerApp
+      onSuccess: data => {
+        const res = data.deletePage
         if (res.errors.length > 0) {
           commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
-        commit('DELETE', {item: res.customerApp})
+        commit('DELETE', {item: res.page})
       },
-      onFailure: (data) => {
+      onFailure: data => {
         commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
     })
   },
   EDIT ({ commit, rootState}, payload) {
-    // payload is inn the form {id: someappid, name: somenewname}
-    const query = `mutation ($id: Int!, $name: String!) {
-      updateCustomerApp(input: {id: $id, name: $name}) {
-        customerApp {id, name, slug, authAccountId}
+    // payload is inn the form {id: someappid, title: somenewtitle}
+    const query = `mutation ($id: Int!, $title: String!) {
+      updatePage(input: {id: $id, title: $title}) {
+        page {id, title, route}
         errors
       }
     }`
 
-    const variables = {"id": payload.id, "name": payload.name}
+    const variables = {"id": payload.id, "title": payload.title}
 
     this.app.$api({
       query,
       variables: variables,
-      onSuccess: (data) => {
-        const res = data.updateCustomerApp
+      onSuccess: data => {
+        const res = data.updatePage
         if (res.errors.length > 0) {
           commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
-        commit('UPDATE', {item: res.customerApp})
+        commit('UPDATE', {item: res.page})
       },
-      onFailure: (data) => {
+      onFailure: data => {
         commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
       }
 
@@ -164,37 +158,37 @@ export const actions = {
 // mutations
 export const mutations = {
   SET_ALL (state, data) {
-    state.list = data
+    state.pages = data
   },
   SET_CURRENT (state, data) {
-    state.current = data
+    state.currentPage = data
   },
   CREATE (state, data) {
     if (data.item) {
-     state.list.push(data.item)
+     state.pages.push(data.item)
     }
   },
   UPDATE (state, data) {
-    const updatedApp = state.list.find(function (app) {
+    const updatedPage = state.pages.find(function (app) {
       return app.id === data.item.id
     })
 
-    const index = state.list.indexOf(updatedApp)
+    const index = state.pages.indexOf(updatedPage)
 
     if (index !== -1) {
-      state.list.splice(index, 1)
-      state.list.push(data.item)
+      state.pages.splice(index, 1)
+      state.pages.push(data.item)
     }
   },
   DELETE (state, data) {
-    const deletedApp = state.list.find(function (app) {
+    const deletedPage = state.pages.find(function (app) {
       return app.id === data.item.id
     })
 
-    const index = state.list.indexOf(deletedApp)
+    const index = state.pages.indexOf(deletedPage)
 
     if (index !== -1) {
-      state.list.splice(index, 1)
+      state.pages.splice(index, 1)
     }
   }
 }

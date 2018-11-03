@@ -84,8 +84,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import _ from 'lodash'
-
 
 export default {
   name: 'Pages',
@@ -116,8 +114,10 @@ export default {
       event.preventDefault()
       this.$validator.validateAll().then(result => {
         if (result) {
-          const newRoute = _.kebabCase(this.newPageName)
-          this.$store.dispatch('newPage', {appId: this.$route.params.appId, body: {title: this.newPageName, route: newRoute}})
+          this.$store.dispatch('pages/NEW', {
+            appId: this.$store.state.apps.current.id,
+            title: this.newPageName
+          })
           this.togglePageForm()
         }
       })

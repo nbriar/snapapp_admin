@@ -38,7 +38,9 @@ module.exports = {
   */
   plugins: [
     '@/plugins/vuetify',
-    {src: '~/plugins/vee-validate.js'}
+    {src: '~/plugins/vee-validate.js'},
+    {src: './plugins/axios-config.js'},
+    {src: './plugins/api.js'}
   ],
 
   /*

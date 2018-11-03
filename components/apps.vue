@@ -144,10 +144,10 @@ export default {
     }
   },
   computed: mapGetters({
-    apps: 'appStore/apps'
+    apps: 'apps/list'
   }),
   created () {
-    this.$store.dispatch('appStore/GET_ALL_APPS')
+    this.$store.dispatch('apps/GET_ALL')
   },
   methods: {
     toggleAppForm: function () {
@@ -158,9 +158,9 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           if (this.isUpdatedApp) {
-            this.$store.dispatch('appStore/EDIT_APP', {id: this.currentApp.id, name: this.editedAppName})
+            this.$store.dispatch('apps/EDIT', {id: this.currentApp.id, name: this.editedAppName})
           } else {
-            this.$store.dispatch('appStore/NEW_APP', {name: this.editedAppName})
+            this.$store.dispatch('apps/NEW', {name: this.editedAppName})
           }
           this.toggleAppForm()
         }
@@ -177,7 +177,7 @@ export default {
     },
     deleteApp: function (appId) {
       this.deleteConfirmation = false
-      this.$store.dispatch('appStore/DESTROY_APP', {id: appId})
+      this.$store.dispatch('apps/DESTROY', {id: appId})
     }
   }
 }

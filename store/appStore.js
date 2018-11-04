@@ -9,7 +9,8 @@ export const state = () => {
 // getters
 export const getters = {
   list: state => state.list,
-  current: state => state.current
+  current: state => state.current,
+  currentId: state => state.current.id
 }
 
 
@@ -26,7 +27,7 @@ export const actions = {
         updatedAt
       }
     }`
-
+    
     this.app.$api({
       query,
       variables: null,
@@ -168,6 +169,8 @@ export const mutations = {
   },
   SET_CURRENT (state, data) {
     state.current = data
+    this.app.store.commit('pages/SET_ALL', data.pages)
+    this.app.$axios.setHeader('X-APP-ID', data.id)
   },
   CREATE (state, data) {
     if (data.item) {

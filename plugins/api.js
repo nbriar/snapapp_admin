@@ -19,8 +19,8 @@ export default ({ app }) => {
       })
       .catch(e => {
         if (e.response.status === 401) {
-         unsetToken()
-         window.location = '/auth/sign-in'
+         // unsetToken()
+         window.location = '/'
         }
         onFailure(e.message)
         return null

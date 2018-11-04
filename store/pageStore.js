@@ -8,14 +8,14 @@ export const state = () => {
 
 // getters
 export const getters = {
-  pages: state => state.pages,
-  currentPage: state => state.currentPage
+  list: state => state.pages,
+  current: state => state.currentPage
 }
 
 
 // actions
 export const actions = {
-  GET_ALL ({ commit, rootState }) {
+  GET_ALL ({ commit }) {
     const query = `{
       pages {
         id
@@ -25,6 +25,7 @@ export const actions = {
         updatedAt
       }
     }`
+
     this.app.$api({
       query,
       variables: null,

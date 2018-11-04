@@ -6,7 +6,7 @@
     <div>
       {{ currentApp }}
     </div>
-    <pages :pages="currentApp.pages" />
+    <pages />
   </v-layout>
 </template>
 

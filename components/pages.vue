@@ -87,16 +87,11 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Pages',
-  props: {
-    pages: {
-      type: Array,
-      default: () => []
-    }
-  },
   data: function () {
     return {
       showPageForm: false,
       newPageName: '',
+      deleteConfirmation: false,
       search: '',
       headers: [
         { text: 'Title', align: 'left', sortable: true, value: 'title' },
@@ -106,6 +101,9 @@ export default {
       ]
     }
   },
+  computed: mapGetters({
+    pages: 'pages/list'
+  }),
   methods: {
     togglePageForm: function () {
       this.showPageForm = !this.showPageForm
@@ -127,7 +125,7 @@ export default {
       this.$router.push({ name: 'page', params: { appId, pageId } })
     },
     deletePage: function (page) {
-      this.$store.dispatch('destroyPage', {item: page})
+      this.$store.dispatch('pages/DESTROY', {item: page})
     },
     confirmDelete: function (page) {
       const vm = this
@@ -143,8 +141,5 @@ export default {
         .catch(function () {})
     }
   }
-  // created () {
-  //   this.$store.dispatch('getAllPages', {appId: this.$route.params.appId})
-  // }
 }
 </script>

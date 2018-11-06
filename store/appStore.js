@@ -27,7 +27,7 @@ export const actions = {
         updatedAt
       }
     }`
-    
+
     this.app.$api({
       query,
       variables: null,
@@ -49,12 +49,16 @@ export const actions = {
         slug
         authAccountId
         pages {
+          id
           title
+          route
         }
         collections {
+          id
           name
         }
         components {
+          id
           name
         }
         createdAt

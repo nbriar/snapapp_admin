@@ -98,7 +98,8 @@ export const actions = {
     })
   },
   DESTROY ({ commit, rootState}, payload) {
-    // payload is inn the form {id: someappid}
+    console.log('payme', payload)
+    // payload is inn the form {id: some_integer_id}
     const query = `mutation ($id: Int!){
       deletePage(input: {id: $id}) {
         page {id, title, route}

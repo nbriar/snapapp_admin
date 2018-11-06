@@ -1,5 +1,13 @@
 <template>
   <div class="text-left mt-5">
+    <deleteConfirmation
+      :visible="showDeleteConfirmation"
+      :item-id="deletableItem.id"
+      :title="deletableItem.title"
+      :cancel-callback="cancelDelete"
+      :confirm-callback="deletePage"
+    />
+    {{ pages }}
     <v-btn
       small
       outline
@@ -59,15 +67,20 @@
           slot-scope="props">
           <td>{{ props.item.title }}</td>
           <td class="text-xs-left">{{ props.item.route }}</td>
-          <td
-            class="text-xs-left"
-            @click="viewPage(props.item.id)">
-            <a>View</a>
+          <td class="text-xs-left">
+            <v-icon
+              class="cursor-hover"
+              @click="viewPage(props.item.id)">pageview</v-icon>
           </td>
-          <td
-            class="text-xs-left"
-            @click="confirmDelete(props.item)">
-            <a class="red--text">Delete</a>
+          <td class="text-xs-left">
+            <v-icon
+              class="cursor-hover"
+              @click="editPage(props.item)">edit</v-icon>
+          </td>
+          <td class="text-xs-left">
+            <v-icon
+              class="cursor-hover"
+              @click="confirmDelete(props.item)">delete</v-icon>
           </td>
         </template>
         <v-alert
@@ -84,14 +97,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import deleteConfirmation from '../components/delete-confirmation.vue'
 
 export default {
   name: 'Pages',
+  components: {
+    deleteConfirmation
+  },
   data: function () {
     return {
       showPageForm: false,
       newPageName: '',
-      deleteConfirmation: false,
+      showDeleteConfirmation: false,
+      deletableItem: {},
       search: '',
       headers: [
         { text: 'Title', align: 'left', sortable: true, value: 'title' },
@@ -124,21 +142,20 @@ export default {
       const appId = this.$route.params.appId
       this.$router.push({ name: 'page', params: { appId, pageId } })
     },
-    deletePage: function (page) {
-      this.$store.dispatch('pages/DESTROY', {item: page})
+    editPage: function (page) {
+      console.log('editing')
     },
-    confirmDelete: function (page) {
-      const vm = this
-      this.$dialog.confirm(`<b><span class="text-bold text-danger">DELETE</span></b> <b class="text-info">${page.title}</b>? This is irreversible!`, {
-        html: true,
-        verification: page.title,
-        verificationHelp: 'Enter "[+:verification]" below and click on "[+:okText]"',
-        type: 'hard'
-      })
-        .then(function () {
-          vm.deletePage(page)
-        })
-        .catch(function () {})
+    deletePage: function (id) {
+      this.showDeleteConfirmation = false
+      this.$store.dispatch('pages/DESTROY', {id})
+      this.deletableItem = {}
+    },
+    confirmDelete: function(page) {
+      this.showDeleteConfirmation = true
+      this.deletableItem = page
+    },
+    cancelDelete: function() {
+      this.showDeleteConfirmation = false
     }
   }
 }

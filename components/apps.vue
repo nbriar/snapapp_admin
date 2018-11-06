@@ -1,5 +1,13 @@
 <template>
   <div>
+    <deleteConfirmation
+      :visible="showDeleteConfirmation"
+      :item-id="deletableItem.id"
+      :title="deletableItem.name"
+      :cancel-callback="cancelDelete"
+      :confirm-callback="deleteApp"
+    />
+
     <v-btn
       small
       outline
@@ -46,39 +54,7 @@
           <td class="text-xs-left">
             <v-icon
               class="cursor-hover"
-              @click="deleteConfirmation = true">delete</v-icon>
-            <v-dialog
-              v-model="deleteConfirmation"
-              max-width="290"
-            >
-              <v-card>
-                <v-card-title class="headline">
-                  <b class="mr-3">
-                    <span class="text-bold red--text">DELETE</span>
-                  </b>
-                  <b class="text-info"> {{ props.item.name }}</b>?
-                  <div class="mt-3">This is irreversible!</div>
-                </v-card-title>
-                <v-card-actions>
-                  <v-spacer />
-
-                  <v-btn
-                    flat="flat"
-                    @click="deleteConfirmation = false"
-                  >
-                    Cancel
-                  </v-btn>
-
-                  <v-btn
-                    color="red darken-1"
-                    flat="flat"
-                    @click="deleteApp(props.item.id)"
-                  >
-                    Continue
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+              @click="confirmDelete(props.item)">delete</v-icon>
           </td>
         </template>
         <v-alert
@@ -122,14 +98,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import deleteConfirmation from '../components/delete-confirmation.vue'
 
 export default {
   name: 'Apps',
+  components: {
+    deleteConfirmation
+  },
   data: function () {
     return {
       showAppForm: false,
       validForm: false,
-      deleteConfirmation: false,
+      showDeleteConfirmation: false,
+      deletableItem: {},
       isUpdatedApp: false,
       currentApp: null,
       editedAppName: '',
@@ -175,9 +156,17 @@ export default {
       this.currentApp = app
       this.editedAppName = app.name
     },
-    deleteApp: function (appId) {
-      this.deleteConfirmation = false
-      this.$store.dispatch('apps/DESTROY', {id: appId})
+    deleteApp: function (id) {
+      this.showDeleteConfirmation = false
+      this.$store.dispatch('apps/DESTROY', {id})
+      this.deletableItem = {}
+    },
+    confirmDelete: function(app) {
+      this.showDeleteConfirmation = true
+      this.deletableItem = app
+    },
+    cancelDelete: function() {
+      this.showDeleteConfirmation = false
     }
   }
 }

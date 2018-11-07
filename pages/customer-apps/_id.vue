@@ -1,8 +1,7 @@
 <template>
   <v-layout
     column
-    justify-center
-    align-center>
+    justify-center>
 
     <pages />
   </v-layout>

@@ -1,9 +1,8 @@
 <template>
   <v-layout
     column
-    justify-center
-    align-center>
-    <Apps xs12 />
+    justify-center>
+    <Apps />
   </v-layout>
 </template>
 

@@ -45,53 +45,59 @@
       </form>
     </div>
 
-    <v-card>
-      <v-card-title>
-        <h3>Pages</h3>
-        <v-spacer />
-        <v-text-field
-          v-model="search"
-          append-icon="search"
-          label="Search"
-          single-line
-          hide-details
-        />
-      </v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="pages"
-        :search="search"
-      >
-        <template
-          slot="items"
-          slot-scope="props">
-          <td>{{ props.item.title }}</td>
-          <td class="text-xs-left">{{ props.item.route }}</td>
-          <td class="text-xs-left">
-            <v-icon
-              class="cursor-hover"
-              @click="viewPage(props.item.id)">pageview</v-icon>
-          </td>
-          <td class="text-xs-left">
-            <v-icon
-              class="cursor-hover"
-              @click="editPage(props.item)">edit</v-icon>
-          </td>
-          <td class="text-xs-left">
-            <v-icon
-              class="cursor-hover"
-              @click="confirmDelete(props.item)">delete</v-icon>
-          </td>
-        </template>
-        <v-alert
-          slot="no-results"
-          :value="true"
-          color="error"
-          icon="warning">
-          No results for "{{ search }}".
-        </v-alert>
-      </v-data-table>
-    </v-card>
+    <v-container
+      fluid
+      grid-list-xs
+    >
+      <v-layout
+        align-start
+        justify-space-around
+        row
+        wrap>
+
+        <v-flex xs12>
+          <v-card
+            v-for="(item) in pages"
+            :key="item.id"
+            color="blue-grey darken-2 mt-3"
+            class="white--text">
+            <v-card-title primary-title>
+              <div class="headline">{{ item.title }}</div>
+            </v-card-title>
+            <v-card-text>
+              Route: {{ item.route }}
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                flat
+                icon
+                class="text-xs-left mr-5">
+                <v-icon
+                  class="cursor-hover"
+                  @click="viewPage(item.id)">pageview</v-icon>
+              </v-btn>
+              <v-btn
+                flat
+                icon
+                class="text-xs-left mr-5">
+                <v-icon
+                  class="cursor-hover"
+                  @click="editPage(item)"
+                >edit</v-icon>
+              </v-btn>
+              <v-btn
+                flat
+                icon
+                class="text-xs-left mr-5">
+                <v-icon
+                  class="cursor-hover"
+                  @click="confirmDelete(item)">delete</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 

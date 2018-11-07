@@ -8,91 +8,95 @@
       :confirm-callback="deleteApp"
     />
 
-    <v-btn
-      small
-      outline
-      color="secondary"
-      class="mb-3"
-      @click="toggleAppForm">Create New App</v-btn>
-    <v-card>
-      <v-card-title>
-        <h3>My Apps</h3>
-        <v-spacer />
-        <v-text-field
-          v-model="search"
-          append-icon="search"
-          label="Search"
-          single-line
-          hide-details
-        />
-      </v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="apps"
-        :search="search"
-      >
-        <template
-          slot="items"
-          slot-scope="props">
-          <td
-            class="cursor-hover"
-            @click="viewApp(props.item.id)">
-            {{ props.item.name }}
-          </td>
-          <td class="text-xs-left">{{ props.item.slug }}</td>
-          <td class="text-xs-left">
-            <v-icon
-              class="cursor-hover"
-              @click="viewApp(props.item.id)">pageview</v-icon>
-          </td>
-          <td class="text-xs-left">
-            <v-icon
-              class="cursor-hover"
-              @click="editApp(props.item)"
-            >edit</v-icon>
-          </td>
-          <td class="text-xs-left">
-            <v-icon
-              class="cursor-hover"
-              @click="confirmDelete(props.item)">delete</v-icon>
-          </td>
-        </template>
-        <v-alert
-          slot="no-results"
-          :value="true"
-          color="error"
-          icon="warning">
-          No results for "{{ search }}".
-        </v-alert>
-      </v-data-table>
-    </v-card>
+    <div>
+      <v-btn
+        small
+        outline
+        color="secondary"
+        class="mb-3"
+        @click="toggleAppForm">Create New App</v-btn>
 
-    <!-- New App Form-->
-    <div v-if="showAppForm">
-      <h3>{{ isUpdatedApp ? 'Update' : 'Create New' }} App</h3>
-      <v-form
-        v-if="showAppForm"
-        v-model="validForm"
-        lazy-validation>
-        <v-text-field
-          v-validate="'required|alpha_spaces'"
-          v-model="editedAppName"
-          :error-messages="errors.collect('name')"
-          label="App Name"
-          data-vv-name="name"
-          required
-        />
-        <v-btn
-          small
-          color="primary"
-          @click="onSubmit">Submit</v-btn>
-        <v-btn
-          small
-          outline
-          color="primary"
-          @click="toggleAppForm">Cancel</v-btn>
-      </v-form>
+      <!-- New App Form-->
+      <div v-if="showAppForm">
+        <h3>{{ isUpdatedApp ? 'Update' : 'Create New' }} App</h3>
+        <v-form
+          v-if="showAppForm"
+          v-model="validForm"
+          lazy-validation>
+          <v-text-field
+            v-validate="'required|alpha_spaces'"
+            v-model="editedAppName"
+            :error-messages="errors.collect('name')"
+            label="App Name"
+            data-vv-name="name"
+            required
+          />
+          <v-btn
+            small
+            color="primary"
+            @click="onSubmit">Submit</v-btn>
+          <v-btn
+            small
+            outline
+            color="primary"
+            @click="toggleAppForm">Cancel</v-btn>
+        </v-form>
+      </div>
     </div>
+
+    <v-container
+      fluid
+      grid-list-xs
+    >
+      <v-layout
+        align-start
+        justify-space-around
+        row
+        wrap>
+
+        <v-flex xs12>
+          <v-card
+            v-for="(item) in apps"
+            :key="item.id"
+            color="blue-grey darken-2 mt-3"
+            class="white--text">
+            <v-card-title primary-title>
+              <div class="headline">{{ item.name }}</div>
+            </v-card-title>
+            <v-card-text>
+              ID: {{ item.slug }}
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                flat
+                icon
+                class="text-xs-left mr-5">
+                <v-icon
+                  class="cursor-hover"
+                  @click="viewApp(item.id)">pageview</v-icon>
+              </v-btn>
+              <v-btn
+                flat
+                icon
+                class="text-xs-left mr-5">
+                <v-icon
+                  class="cursor-hover"
+                  @click="editApp(item)"
+                >edit</v-icon>
+              </v-btn>
+              <v-btn
+                flat
+                icon
+                class="text-xs-left mr-5">
+                <v-icon
+                  class="cursor-hover"
+                  @click="confirmDelete(item)">delete</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 

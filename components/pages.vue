@@ -134,6 +134,8 @@ export default {
     togglePageForm: function () {
       this.showPageForm = !this.showPageForm
       this.newPageTitle = ''
+      this.updatePage = false
+      this.currentPage = null
     },
     onSubmit: function (event) {
       event.preventDefault()

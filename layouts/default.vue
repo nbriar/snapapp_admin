@@ -61,15 +61,10 @@
       >
         <v-icon>person</v-icon>
       </v-btn>
-      <v-btn
-        v-if="!isAuthenticated"
-        to="/auth/sign-in"
-      >
-        Login
-      </v-btn>
     </v-toolbar>
     <v-content>
       <v-container>
+        <h3 class="text-xs-center">{{ currentApp.name }}</h3>
         <nuxt />
       </v-container>
     </v-content>
@@ -137,9 +132,10 @@
         title: 'SnapApp'
       }
     },
-    computed: mapGetters([
-      'isAuthenticated',
-      'loggedUser'
-    ])
+    computed: mapGetters({
+      isAuthenticated: 'isAuthenticated',
+      loggedUser: 'loggedUser',
+      currentApp: 'apps/current'
+    })
   }
 </script>

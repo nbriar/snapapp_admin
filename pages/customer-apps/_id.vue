@@ -3,9 +3,7 @@
     column
     justify-center
     align-center>
-    <div>
-      {{ currentApp }}
-    </div>
+
     <pages />
   </v-layout>
 </template>

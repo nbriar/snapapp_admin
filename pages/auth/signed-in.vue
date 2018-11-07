@@ -15,6 +15,8 @@ export default {
     const user = JSON.stringify(jwtDecode(token))
 
     this.$store.commit('SET_USER', {user, token})
+    this.$axios.setHeader('Authorization', `Bearer ${token}`)
+
     setToken(token)
     this.$router.replace('/')
   }

@@ -69,7 +69,7 @@
 
     <!-- New App Form-->
     <div v-if="showAppForm">
-      <h3>{{ isUpdatedApp ? 'Update' : 'Create' }} New App</h3>
+      <h3>{{ isUpdatedApp ? 'Update' : 'Create New' }} App</h3>
       <v-form
         v-if="showAppForm"
         v-model="validForm"

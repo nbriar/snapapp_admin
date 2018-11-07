@@ -7,11 +7,11 @@
       :cancel-callback="cancelDelete"
       :confirm-callback="deletePage"
     />
-    {{ pages }}
+
     <v-btn
       small
       outline
-      color="primary"
+      color="secondary"
       class="mb-3"
       @click="togglePageForm">
       Create New Page
@@ -19,11 +19,11 @@
 
     <!-- New Page Form-->
     <div v-if="showPageForm">
-      <h3>Create New Page</h3>
+      <h3>{{ isUpdatedPage ? 'Update' : 'Create New' }} Page</h3>
       <form v-if="showPageForm">
         <v-text-field
           v-validate="'required|alpha_spaces'"
-          v-model="newPageName"
+          v-model="newPageTitle"
           :error-messages="errors.collect('title')"
           data-vv-name="title"
           required
@@ -107,9 +107,11 @@ export default {
   data: function () {
     return {
       showPageForm: false,
-      newPageName: '',
+      newPageTitle: '',
       showDeleteConfirmation: false,
       deletableItem: {},
+      isUpdatedPage: false,
+      currentPage: null,
       search: '',
       headers: [
         { text: 'Title', align: 'left', sortable: true, value: 'title' },
@@ -125,15 +127,24 @@ export default {
   methods: {
     togglePageForm: function () {
       this.showPageForm = !this.showPageForm
+      this.newPageTitle = ''
     },
     onSubmit: function (event) {
       event.preventDefault()
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.$store.dispatch('pages/NEW', {
-            appId: this.$store.state.apps.current.id,
-            title: this.newPageName
-          })
+          if (this.isUpdatedPage) {
+            this.$store.dispatch('pages/EDIT', {
+              id: this.currentPage.id,
+              title: this.newPageTitle
+            })
+          } else {
+            this.$store.dispatch('pages/NEW', {
+              appId: this.$store.state.apps.current.id,
+              title: this.newPageTitle
+            })
+          }
+
           this.togglePageForm()
         }
       })
@@ -143,7 +154,10 @@ export default {
       this.$router.push({ name: 'page', params: { appId, pageId } })
     },
     editPage: function (page) {
-      console.log('editing')
+      this.showPageForm = true
+      this.isUpdatedPage = true
+      this.newPageTitle = page.title
+      this.currentPage = page
     },
     deletePage: function (id) {
       this.showDeleteConfirmation = false

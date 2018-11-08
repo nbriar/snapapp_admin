@@ -9,9 +9,46 @@
       fixed
       app
     >
+
       <v-list>
+
+        <v-toolbar
+          flat
+          class="transparent">
+          <v-list class="pa-0">
+            <v-list-tile
+              router
+              to="/"
+              exact
+            >
+              <v-list-tile-action>
+                <v-icon>apps</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>My Applications</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-toolbar>
+        <v-divider light />
+
+        <v-toolbar
+          v-show="!!currentApp.id"
+          flat
+          class="transparent">
+          <v-list class="pa-0">
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ currentApp.name }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-toolbar>
+        <v-divider light />
+
         <v-list-tile
           v-for="(item, i) in navItems"
+          v-show="showMenuItem(item)"
           :to="item.to"
           :key="i"
           router
@@ -64,7 +101,6 @@
     </v-toolbar>
     <v-content>
       <v-container>
-        <h3 class="text-xs-center">{{ currentApp.name }}</h3>
         <nuxt />
       </v-container>
     </v-content>
@@ -116,8 +152,9 @@
         clipped: true,
         drawer: true,
         navItems: [
-          { icon: 'apps', title: 'My Applications', to: '/' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+          { icon: 'pages', title: 'Pages', to: `/pages`, showForAppOnly: true},
+          { icon: 'bubble_chart', title: 'Collections', to: `/collections`, showForAppOnly: true},
+          { icon: 'widgets', title: 'Components', to: `/components`, showForAppOnly: true}
         ],
         profileItems: [
           { icon: 'fingerprint', title: 'Profile', to: '/' },
@@ -136,6 +173,14 @@
       isAuthenticated: 'isAuthenticated',
       loggedUser: 'loggedUser',
       currentApp: 'apps/current'
-    })
+    }),
+    methods: {
+      showMenuItem (item) {
+        if (!item.showForAppOnly) return true
+        if (item.showForAppOnly && !!this.currentApp.id) return true
+
+        return false
+      }
+    }
   }
 </script>

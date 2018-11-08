@@ -2,26 +2,23 @@
   <v-layout
     column
     justify-center>
-    <Apps />
+    <pages />
   </v-layout>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import Apps from '../components/apps.vue'
+import pages from '../components/pages.vue'
 
 export default {
   middleware: 'authenticated',
   components: {
-    Apps
+    pages
   },
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
     loggedUser: 'loggedUser',
-    apps: 'apps/list'
-  }),
-  created () {
-    this.$store.commit('apps/SET_CURRENT', {})
-  }
+    currentApp: 'apps/current'
+  })
 }
 </script>

@@ -62,20 +62,15 @@
             color="blue-grey darken-2 mt-3"
             class="white--text">
             <v-card-title primary-title>
-              <div class="headline">{{ item.title }}</div>
+              <div
+                class="headline cursor-hover"
+                @click="viewPage(item.id)"
+              >{{ item.title }}</div>
             </v-card-title>
             <v-card-text>
               Route: {{ item.route }}
             </v-card-text>
             <v-card-actions>
-              <v-btn
-                flat
-                icon
-                class="text-xs-left mr-5">
-                <v-icon
-                  class="cursor-hover"
-                  @click="viewPage(item.id)">pageview</v-icon>
-              </v-btn>
               <v-btn
                 flat
                 icon
@@ -157,9 +152,8 @@ export default {
         }
       })
     },
-    viewPage: function (pageId) {
-      const appId = this.$route.params.appId
-      this.$router.push({ name: 'page', params: { appId, pageId } })
+    viewPage: function (id) {
+      this.$router.push({ name: 'app-pages-id', params: { id } })
     },
     editPage: function (page) {
       this.showPageForm = true

@@ -2,7 +2,7 @@
   <v-layout
     column
     justify-center>
-    This is the collections view.
+    <h2>Collections</h2>
   </v-layout>
 </template>
 

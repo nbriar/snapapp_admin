@@ -61,20 +61,15 @@
             color="blue-grey darken-2 mt-3"
             class="white--text">
             <v-card-title primary-title>
-              <div class="headline">{{ item.name }}</div>
+              <div
+                class="headline cursor-hover"
+                @click="viewApp(item.id)"
+              >{{ item.name }}</div>
             </v-card-title>
             <v-card-text>
               ID: {{ item.slug }}
             </v-card-text>
             <v-card-actions>
-              <v-btn
-                flat
-                icon
-                class="text-xs-left mr-5">
-                <v-icon
-                  class="cursor-hover"
-                  @click="viewApp(item.id)">pageview</v-icon>
-              </v-btn>
               <v-btn
                 flat
                 icon

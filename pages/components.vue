@@ -2,7 +2,7 @@
   <v-layout
     column
     justify-center>
-    This is the components view.
+    <h2>Components</h2>
   </v-layout>
 </template>
 

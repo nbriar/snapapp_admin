@@ -2,6 +2,7 @@
   <v-layout
     column
     justify-center>
+    <h2>Pages</h2>
     <pages />
   </v-layout>
 </template>

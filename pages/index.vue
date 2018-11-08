@@ -2,6 +2,7 @@
   <v-layout
     column
     justify-center>
+    <h2>My Applications</h2>
     <Apps />
   </v-layout>
 </template>

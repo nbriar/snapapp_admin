@@ -19,7 +19,8 @@ export default ({ app, redirect }) => {
       })
       .catch(e => {
         if (e.response.status === 401) {
-         return redirect('/auth/sign-in')
+          unsetToken()
+          return redirect('/auth/sign-in')
         }
         onFailure(e.message)
         return null

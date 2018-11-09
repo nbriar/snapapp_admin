@@ -148,7 +148,7 @@ export default {
     },
     viewApp: function (appId) {
       this.$store.dispatch('apps/GET', {id: appId})
-      this.$router.push({ name: 'pages' })
+      this.$router.push({ name: 'app-pages' })
     },
     editApp: function (app) {
       this.showAppForm = true

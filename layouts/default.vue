@@ -152,7 +152,7 @@
         clipped: true,
         drawer: true,
         navItems: [
-          { icon: 'pages', title: 'Pages', to: `/pages`, showForAppOnly: true},
+          { icon: 'pages', title: 'Pages', to: `/app-pages`, showForAppOnly: true},
           { icon: 'bubble_chart', title: 'Collections', to: `/collections`, showForAppOnly: true},
           { icon: 'widgets', title: 'Components', to: `/components`, showForAppOnly: true}
         ],

@@ -9,7 +9,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import pages from '../components/pages.vue'
+import pages from '../../components/pages.vue'
 
 export default {
   middleware: 'authenticated',

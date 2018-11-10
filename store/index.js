@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import apps from './appStore'
 import pages from './pageStore'
+import templates from './templateStore'
 import snackbar from './snackbar'
 
 const createStore = () => {
@@ -29,7 +30,8 @@ const createStore = () => {
     modules: {
       snackbar,
       apps,
-      pages
+      pages,
+      templates
     }
   })
 }

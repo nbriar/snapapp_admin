@@ -4,6 +4,7 @@
     justify-center>
     <h2>My Applications</h2>
     <Apps />
+    {{ templates }}
   </v-layout>
 </template>
 
@@ -19,10 +20,12 @@ export default {
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
     loggedUser: 'loggedUser',
-    apps: 'apps/list'
+    apps: 'apps/list',
+    templates: 'templates/list'
   }),
   created () {
     this.$store.commit('apps/SET_CURRENT', {})
+    this.$store.dispatch('templates/GET_ALL')
   }
 }
 </script>

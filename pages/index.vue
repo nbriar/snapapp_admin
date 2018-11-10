@@ -22,8 +22,7 @@ export default {
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
     loggedUser: 'loggedUser',
-    apps: 'apps/list',
-    templates: 'templates/list'
+    apps: 'apps/list'
   }),
   mounted () {
     this.$store.commit('apps/SET_CURRENT', {})

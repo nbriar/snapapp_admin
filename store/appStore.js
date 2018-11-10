@@ -35,7 +35,7 @@ export const actions = {
         commit('SET_ALL', data.customerApps)
       },
       onFailure: (data) => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -60,6 +60,8 @@ export const actions = {
         components {
           id
           name
+          element
+          template
         }
         createdAt
         updatedAt
@@ -75,7 +77,7 @@ export const actions = {
         commit('SET_CURRENT', data.customerApp)
       },
       onFailure: (data) => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -96,14 +98,14 @@ export const actions = {
       onSuccess: (data) => {
         const res = data.createCustomerApp
         if (res.errors.length > 0) {
-          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
+          commit('snackbar/SET_SNACK', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('CREATE', {item: res.customerApp})
       },
       onFailure: (data) => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -124,14 +126,14 @@ export const actions = {
       onSuccess: (data) => {
         const res = data.deleteCustomerApp
         if (res.errors.length > 0) {
-          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
+          commit('snackbar/SET_SNACK', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('DELETE', {item: res.customerApp})
       },
       onFailure: (data) => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -152,14 +154,14 @@ export const actions = {
       onSuccess: (data) => {
         const res = data.updateCustomerApp
         if (res.errors.length > 0) {
-          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
+          commit('snackbar/SET_SNACK', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('UPDATE', {item: res.customerApp})
       },
       onFailure: (data) => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
 
     })
@@ -173,8 +175,11 @@ export const mutations = {
   },
   SET_CURRENT (state, data) {
     state.current = data
+    this.app.$axios.defaults.headers.common['X-APP-ID'] = data.id
+
     this.app.store.commit('pages/SET_ALL', data.pages)
-    this.app.$axios.setHeader('X-APP-ID', data.id)
+    this.app.store.commit('appComponents/SET_ALL', data.components)
+
   },
   CREATE (state, data) {
     if (data.item) {

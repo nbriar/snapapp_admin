@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import apps from './appStore'
 import pages from './pageStore'
 import templates from './templateStore'
+import appComponents from './appComponentStore'
 import snackbar from './snackbar'
 
 const createStore = () => {
@@ -31,7 +32,8 @@ const createStore = () => {
       snackbar,
       apps,
       pages,
-      templates
+      templates,
+      appComponents
     }
   })
 }

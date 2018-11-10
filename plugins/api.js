@@ -7,18 +7,18 @@ export default ({ app, store, redirect }) => {
     headers: {}
   }
 
-  const token = (store.state.authToken) ? store.state.authToken : null
-  const appId = (store.state.apps && store.state.apps.current) ? store.state.apps.current.id : null
-
-  if (appId) {
-    config.headers['X-APP-ID'] = appId
-  }
-
-  if (token) {
-    config.headers['Authorization'] = token
-  }
-
   app.$api = ({query, variables, onSuccess, onFailure}) => {
+    const token = (store.state.authToken) ? store.state.authToken : null
+    const appId = (store.state.apps && store.state.apps.current) ? store.state.apps.currentId : null
+
+    if (appId) {
+      config.headers['X-APP-ID'] = appId
+    }
+
+    if (token) {
+      config.headers['Authorization'] = token
+    }
+
     app.$axios.post(API_URL, {query: query, variables: variables}, config)
       .then(response => {
         const data = response.data.data
@@ -33,11 +33,9 @@ export default ({ app, store, redirect }) => {
         onSuccess(data)
       })
       .catch(e => {
-        console.log('****************', e)
-
-        // if (e.response.status === 401) {
-        //   return redirect('/auth/sign-in')
-        // }
+        if (e.response.status === 401) {
+          return redirect('/auth/sign-in')
+        }
         onFailure(e.message)
         return null
       })

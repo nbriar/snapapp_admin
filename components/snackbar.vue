@@ -29,7 +29,7 @@ export default {
         this.show = true
         this.color = this.$store.state.snackbar.snack.color
         this.message = this.$store.state.snackbar.snack.text
-        this.$store.commit('snackbar/setSnack', '')
+        this.$store.commit('snackbar/SET_SNACK', '')
       }
     })
   }

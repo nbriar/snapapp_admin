@@ -28,7 +28,7 @@ export const actions = {
         commit('SET_ALL', data.templates)
       },
       onFailure: data => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   }

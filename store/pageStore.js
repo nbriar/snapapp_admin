@@ -33,7 +33,7 @@ export const actions = {
         commit('SET_ALL', data.pages)
       },
       onFailure: data => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -65,7 +65,7 @@ export const actions = {
         commit('SET_CURRENT', data.page)
       },
       onFailure: data => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -86,14 +86,14 @@ export const actions = {
       onSuccess: data => {
         const res = data.createPage
         if (res.errors.length > 0) {
-          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
+          commit('snackbar/SET_SNACK', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('CREATE', {item: res.page})
       },
       onFailure: data => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -114,14 +114,14 @@ export const actions = {
       onSuccess: data => {
         const res = data.deletePage
         if (res.errors.length > 0) {
-          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
+          commit('snackbar/SET_SNACK', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('DELETE', {item: res.page})
       },
       onFailure: data => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
     })
   },
@@ -142,14 +142,14 @@ export const actions = {
       onSuccess: data => {
         const res = data.updatePage
         if (res.errors.length > 0) {
-          commit('snackbar/setSnack', {text: res.errors.join(', '), color: 'error'}, { root: true })
+          commit('snackbar/SET_SNACK', {text: res.errors.join(', '), color: 'error'}, { root: true })
           return
         }
 
         commit('UPDATE', {item: res.page})
       },
       onFailure: data => {
-        commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
+        commit('snackbar/SET_SNACK', {text: data, color: 'error'}, { root: true })
       }
 
     })

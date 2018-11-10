@@ -4,18 +4,20 @@
     justify-center>
     <h2>My Applications</h2>
     <Apps />
-    {{ templates }}
+    <Templates />
   </v-layout>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import Apps from '../components/apps.vue'
+import Templates from '../components/templates.vue'
 
 export default {
   middleware: 'authenticated',
   components: {
-    Apps
+    Apps,
+    Templates
   },
   computed: mapGetters({
     isAuthenticated: 'isAuthenticated',
@@ -23,9 +25,8 @@ export default {
     apps: 'apps/list',
     templates: 'templates/list'
   }),
-  created () {
+  mounted () {
     this.$store.commit('apps/SET_CURRENT', {})
-    this.$store.dispatch('templates/GET_ALL')
   }
 }
 </script>

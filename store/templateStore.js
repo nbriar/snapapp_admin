@@ -7,7 +7,7 @@ export const state = () => {
 
 // getters
 export const getters = {
-  list: state => state.templates
+  list: state => state.list
 }
 
 
@@ -25,8 +25,7 @@ export const actions = {
       query,
       variables: null,
       onSuccess: data => {
-        console.log('tempaltes', data)
-        commit('SET_ALL', data.pages)
+        commit('SET_ALL', data.templates)
       },
       onFailure: data => {
         commit('snackbar/setSnack', {text: data, color: 'error'}, { root: true })
@@ -38,7 +37,7 @@ export const actions = {
 // mutations
 export const mutations = {
   SET_ALL (state, data) {
-    state.templates = data
+    state.list = data
   }
 }
 

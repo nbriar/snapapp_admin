@@ -179,6 +179,7 @@ export const mutations = {
 
     this.app.store.commit('pages/SET_ALL', data.pages)
     this.app.store.commit('appComponents/SET_ALL', data.components)
+    this.app.store.commit('collections/SET_ALL', data.collections)
 
   },
   CREATE (state, data) {

@@ -3,6 +3,7 @@ import apps from './appStore'
 import pages from './pageStore'
 import templates from './templateStore'
 import appComponents from './appComponentStore'
+import collections from './collectionStore'
 import snackbar from './snackbar'
 
 const createStore = () => {
@@ -33,7 +34,8 @@ const createStore = () => {
       apps,
       pages,
       templates,
-      appComponents
+      appComponents,
+      collections
     }
   })
 }
